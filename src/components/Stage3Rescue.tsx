@@ -56,6 +56,14 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
 
   const currentCodeQ = STAGE_3_QUESTIONS[activeCodeIdx] || STAGE_3_QUESTIONS[0];
 
+  // Start background music when entering Stage 3, pause when leaving
+  useEffect(() => {
+    soundEngine.playBGM();
+    return () => {
+      soundEngine.pauseBGM();
+    };
+  }, []);
+
   useEffect(() => {
     setIsSolutionShown(false);
     setIsHintShown(false);

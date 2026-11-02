@@ -52,6 +52,14 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
 
   const currentLockQ = STAGE_2_QUESTIONS[activeLockIdx] || STAGE_2_QUESTIONS[0];
 
+  // Start background music when entering Stage 2, pause when leaving
+  useEffect(() => {
+    soundEngine.playBGM();
+    return () => {
+      soundEngine.pauseBGM();
+    };
+  }, []);
+
   useEffect(() => {
     setIsSolutionShown(false);
     setIsHintShown(false);

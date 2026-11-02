@@ -5,6 +5,7 @@
 
 import correctAudioUrl from '../assets/correct.mp3';
 import wrongAudioUrl from '../assets/wrong.mp3';
+import bgmAudioUrl from '../assets/bgm.wav';
 
 // Web Audio API Synthesizer for cosmic sci-fi sound effects & ambient audio
 class SoundEngine {
@@ -16,6 +17,8 @@ class SoundEngine {
   private ambientOsc2: OscillatorNode | null = null;
   private ambientGain: GainNode | null = null;
   private isAmbientPlaying: boolean = false;
+  private bgmAudio: HTMLAudioElement | null = null;
+  private isBgmPlaying: boolean = false;
 
   constructor() {
     // Lazy initialize upon first user gesture
@@ -39,12 +42,56 @@ class SoundEngine {
     if (this.masterGain && this.ctx) {
       this.masterGain.gain.setValueAtTime(muted ? 0 : this.volume, this.ctx.currentTime);
     }
+    if (this.bgmAudio) {
+      if (muted) {
+        this.bgmAudio.pause();
+      } else if (this.isBgmPlaying) {
+        this.bgmAudio.play().catch(() => {});
+      }
+    }
   }
 
   public setVolume(vol: number) {
     this.volume = Math.max(0, Math.min(1, vol));
     if (this.masterGain && this.ctx && !this.isMuted) {
       this.masterGain.gain.setValueAtTime(this.volume, this.ctx.currentTime);
+    }
+    if (this.bgmAudio) {
+      this.bgmAudio.volume = this.volume * 0.55;
+    }
+  }
+
+  // Play background music (loops continuously)
+  public playBGM() {
+    this.isBgmPlaying = true;
+    if (this.isMuted) return;
+
+    try {
+      if (!this.bgmAudio) {
+        this.bgmAudio = new Audio(bgmAudioUrl);
+        this.bgmAudio.loop = true; // Auto-loop when track ends
+      }
+      this.bgmAudio.volume = this.volume * 0.55;
+      this.bgmAudio.play().catch(() => {
+        // Will auto-resume on first user gesture
+      });
+    } catch {}
+  }
+
+  // Pause background music (e.g. when video popup appears)
+  public pauseBGM() {
+    this.isBgmPlaying = false;
+    if (this.bgmAudio) {
+      this.bgmAudio.pause();
+    }
+  }
+
+  // Stop background music and reset track
+  public stopBGM() {
+    this.isBgmPlaying = false;
+    if (this.bgmAudio) {
+      this.bgmAudio.pause();
+      this.bgmAudio.currentTime = 0;
     }
   }
 

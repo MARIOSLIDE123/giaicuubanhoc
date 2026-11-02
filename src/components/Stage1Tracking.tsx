@@ -75,6 +75,14 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
     return opts;
   }, [currentQ.options, shuffleOptions]);
 
+  // Start background music when entering Stage 1, pause when leaving
+  useEffect(() => {
+    soundEngine.playBGM();
+    return () => {
+      soundEngine.pauseBGM();
+    };
+  }, []);
+
   // Reset state on question change
   useEffect(() => {
     setSelectedOptionId(null);

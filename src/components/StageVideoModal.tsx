@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Play, ArrowRight, Map, ExternalLink, X, Film } from 'lucide-react';
+import { soundEngine } from '../utils/sound';
 
 interface StageVideoModalProps {
   isOpen: boolean;
@@ -33,6 +34,13 @@ export const StageVideoModal: React.FC<StageVideoModalProps> = ({
   onBackToMap,
   icon,
 }) => {
+  // When video modal opens, automatically pause background music
+  useEffect(() => {
+    if (isOpen) {
+      soundEngine.pauseBGM();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   // Convert Google Drive view URL to preview URL for iframe embedding
