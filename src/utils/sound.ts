@@ -3,6 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import correctAudioUrl from '../assets/correct.mp3';
+import wrongAudioUrl from '../assets/wrong.mp3';
+
 // Web Audio API Synthesizer for cosmic sci-fi sound effects & ambient audio
 class SoundEngine {
   private ctx: AudioContext | null = null;
@@ -161,9 +164,24 @@ class SoundEngine {
     });
   }
 
-  // Correct answer fanfare (uplifting chord arpeggio)
+  // Correct answer fanfare (Custom uploaded MP3 with synthesizer fallback)
   public playCorrect() {
     if (this.isMuted) return;
+    try {
+      const audio = new Audio(correctAudioUrl);
+      audio.volume = this.volume;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          this.playCorrectSynth();
+        });
+      }
+    } catch {
+      this.playCorrectSynth();
+    }
+  }
+
+  private playCorrectSynth() {
     this.initCtx();
     if (!this.ctx || !this.masterGain) return;
 
@@ -189,9 +207,24 @@ class SoundEngine {
     });
   }
 
-  // Incorrect / retry blip (soft, encouraging sci-fi blip)
+  // Incorrect / retry blip (Custom uploaded MP3 with synthesizer fallback)
   public playWrong() {
     if (this.isMuted) return;
+    try {
+      const audio = new Audio(wrongAudioUrl);
+      audio.volume = this.volume;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          this.playWrongSynth();
+        });
+      }
+    } catch {
+      this.playWrongSynth();
+    }
+  }
+
+  private playWrongSynth() {
     this.initCtx();
     if (!this.ctx || !this.masterGain) return;
 
