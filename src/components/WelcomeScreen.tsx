@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Play, HelpCircle, Settings, ShieldCheck, Sparkles, Compass, Radio } from 'lucide-react';
 import { UfoRescueIllustration } from './UfoRescueIllustration';
 import { soundEngine } from '../utils/sound';
@@ -19,13 +19,25 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   onOpenHelp,
   onOpenSettings,
 }) => {
+  // Start homepage background music on mount, pause when leaving
+  useEffect(() => {
+    soundEngine.playHomeBGM();
+    return () => {
+      soundEngine.pauseHomeBGM();
+    };
+  }, []);
+
   const handleStartMission = () => {
+    soundEngine.pauseHomeBGM();
     soundEngine.playUfoWhoosh();
     onStart();
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between py-6 px-4 sm:px-8 lg:px-12 xl:px-16 w-full max-w-[1780px] mx-auto z-10">
+    <div 
+      onClick={() => soundEngine.playHomeBGM()}
+      className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between py-6 px-4 sm:px-8 lg:px-12 xl:px-16 w-full max-w-[1780px] mx-auto z-10"
+    >
       {/* Top Banner Tag */}
       <div className="flex justify-center items-center">
         <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full panel-cosmic border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-black tracking-widest uppercase shadow-xl animate-pulse">

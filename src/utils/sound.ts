@@ -6,6 +6,8 @@
 import correctAudioUrl from '../assets/correct.mp3';
 import wrongAudioUrl from '../assets/wrong.mp3';
 import bgmAudioUrl from '../assets/bgm.wav';
+import homeBgmAudioUrl from '../assets/bgm-home.mp3';
+import victoryAudioUrl from '../assets/victory-fanfare.mp3';
 
 // Web Audio API Synthesizer for cosmic sci-fi sound effects & ambient audio
 class SoundEngine {
@@ -19,6 +21,8 @@ class SoundEngine {
   private isAmbientPlaying: boolean = false;
   private bgmAudio: HTMLAudioElement | null = null;
   private isBgmPlaying: boolean = false;
+  private homeBgmAudio: HTMLAudioElement | null = null;
+  private isHomeBgmPlaying: boolean = false;
 
   constructor() {
     // Lazy initialize upon first user gesture
@@ -49,6 +53,13 @@ class SoundEngine {
         this.bgmAudio.play().catch(() => {});
       }
     }
+    if (this.homeBgmAudio) {
+      if (muted) {
+        this.homeBgmAudio.pause();
+      } else if (this.isHomeBgmPlaying) {
+        this.homeBgmAudio.play().catch(() => {});
+      }
+    }
   }
 
   public setVolume(vol: number) {
@@ -58,6 +69,43 @@ class SoundEngine {
     }
     if (this.bgmAudio) {
       this.bgmAudio.volume = this.volume * 0.55;
+    }
+    if (this.homeBgmAudio) {
+      this.homeBgmAudio.volume = this.volume * 0.55;
+    }
+  }
+
+  // Play homepage background music (loops continuously)
+  public playHomeBGM() {
+    this.isHomeBgmPlaying = true;
+    if (this.isMuted) return;
+
+    try {
+      if (!this.homeBgmAudio) {
+        this.homeBgmAudio = new Audio(homeBgmAudioUrl);
+        this.homeBgmAudio.loop = true; // Auto-loop when track ends
+      }
+      this.homeBgmAudio.volume = this.volume * 0.55;
+      this.homeBgmAudio.play().catch(() => {
+        // Handled upon first user interaction
+      });
+    } catch {}
+  }
+
+  // Pause homepage background music
+  public pauseHomeBGM() {
+    this.isHomeBgmPlaying = false;
+    if (this.homeBgmAudio) {
+      this.homeBgmAudio.pause();
+    }
+  }
+
+  // Stop homepage background music and reset track
+  public stopHomeBGM() {
+    this.isHomeBgmPlaying = false;
+    if (this.homeBgmAudio) {
+      this.homeBgmAudio.pause();
+      this.homeBgmAudio.currentTime = 0;
     }
   }
 
@@ -340,9 +388,28 @@ class SoundEngine {
     });
   }
 
-  // Grand victory fanfare
+  // Grand victory fanfare (Plays uploaded audio once upon entering Victory Podium)
   public playVictoryFanfare() {
+    this.pauseBGM();
+    this.pauseHomeBGM();
     if (this.isMuted) return;
+
+    try {
+      const audio = new Audio(victoryAudioUrl);
+      audio.loop = false; // Only plays 1 time
+      audio.volume = Math.min(1, this.volume * 0.95);
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          this.playVictorySynth();
+        });
+      }
+    } catch {
+      this.playVictorySynth();
+    }
+  }
+
+  private playVictorySynth() {
     this.initCtx();
     if (!this.ctx || !this.masterGain) return;
 
