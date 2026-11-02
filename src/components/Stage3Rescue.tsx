@@ -14,6 +14,7 @@ import { STAGE_3_QUESTIONS } from '../data/questions';
 import { soundEngine } from '../utils/sound';
 import { StageSidebar } from './StageSidebar';
 import { UfoRescueIllustration } from './UfoRescueIllustration';
+import { StageVideoModal } from './StageVideoModal';
 
 interface Stage3Props {
   teams: Team[];
@@ -572,48 +573,22 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
         </div>
       </main>
 
-      {/* Rescue Pod Victory Celebration Modal */}
-      {isRescueCelebrationOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
-          <div className="panel-cosmic border-2 border-amber-400 rounded-3xl max-w-xl w-full p-6 sm:p-8 text-center shadow-2xl space-y-4 animate-scaleUp">
-            <div className="w-24 h-24 mx-auto drop-shadow-[0_0_25px_rgba(250,204,21,0.6)]">
-              <UfoRescueIllustration size="md" isRescued={true} />
-            </div>
-
-            <div className="text-xs font-black uppercase tracking-widest text-emerald-400">
-              NHIỆM VỤ GIẢI CỨU ĐẠI THÀNH CÔNG!
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-black text-white text-high-contrast">
-              HAI BẠN HỌC SINH ĐÃ ĐƯỢC GIẢI THOÁT!
-            </h3>
-
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-              Cả 3 Mật mã năng lượng tối hậu đã được kích hoạt thành công! Buồng cứu hộ UFO đã mở toang. 
-              Hai bạn nhỏ vui mừng tái hợp cùng các phi hành đoàn quả cảm trong sự reo hò của toàn thể vũ trụ!
-            </p>
-
-            <div className="pt-3 flex items-center justify-center gap-3">
-              <button
-                onClick={onBackToMap}
-                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600"
-              >
-                Về bản đồ
-              </button>
-              <button
-                onClick={() => {
-                  soundEngine.playVictoryFanfare();
-                  onCompleteStage3();
-                }}
-                className="px-7 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-orange-400 to-emerald-400 text-slate-950 font-black text-sm shadow-[0_0_25px_#facc15] hover:shadow-[0_0_35px_#34d399] flex items-center gap-2 btn-3d"
-              >
-                <Trophy className="w-5 h-5" />
-                <span>XEM BẢNG VINH DANH CHIẾN HẠM</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Stage 3 Complete Video Modal */}
+      <StageVideoModal
+        isOpen={isRescueCelebrationOpen}
+        onClose={() => setIsRescueCelebrationOpen(false)}
+        badge="CHIẾN THẮNG CHUNG CUỘC · GIẢI CỨU BẠN HỌC THÀNH CÔNG"
+        title="HAI BẠN HỌC SINH ĐÃ ĐƯỢC GIẢI THOÁT!"
+        description="Cả 3 Mật mã năng lượng tối hậu đã được kích hoạt thành công! Buồng cứu hộ UFO đã mở toang. Mời toàn thể các phi hành đoàn xem thước phim giải cứu trước khi bước lên bục vinh danh!"
+        videoUrl="https://drive.google.com/file/d/1yIm_5bRo1sECDSWns_kUCOmkQXPGieaP/preview"
+        themeColor="amber"
+        onBackToMap={onBackToMap}
+        onNextStage={() => {
+          soundEngine.playVictoryFanfare();
+          onCompleteStage3();
+        }}
+        nextStageButtonText="XEM BẢNG VINH DANH CHIẾN HẠM"
+      />
     </div>
   );
 };

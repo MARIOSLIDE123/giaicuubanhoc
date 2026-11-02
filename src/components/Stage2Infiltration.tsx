@@ -13,6 +13,7 @@ import { Team, MultiPartItem } from '../types/game';
 import { STAGE_2_QUESTIONS } from '../data/questions';
 import { soundEngine } from '../utils/sound';
 import { StageSidebar } from './StageSidebar';
+import { StageVideoModal } from './StageVideoModal';
 
 interface Stage2Props {
   teams: Team[];
@@ -491,48 +492,22 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
         </div>
       </main>
 
-      {/* Door Open Celebration Modal */}
-      {isDoorOpenModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
-          <div className="panel-cosmic border-2 border-purple-400 rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl space-y-4 animate-scaleUp">
-            <div className="w-16 h-16 rounded-full bg-purple-950 border-2 border-purple-400 text-purple-300 flex items-center justify-center mx-auto shadow-[0_0_35px_#c084fc]">
-              <Unlock className="w-8 h-8 animate-bounce text-emerald-400" />
-            </div>
-
-            <div className="text-xs font-black uppercase tracking-widest text-amber-300">
-              CỬA THÉP KHÔNG GIAN ĐÃ MỞ
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-white text-high-contrast">
-              ĐỘT NHẬP THÀNH CÔNG VÀO TÀU UFO!
-            </h3>
-
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-              Tuyệt vời! Cả 5 lớp khóa an ninh bảo mật áp suất đã bị các phi hành đoàn hóa giải hoàn toàn! 
-              Buồng cứu hộ hai bạn học sinh đã hiện ra trước mắt. Hãy tiến vào giải mã 3 Mật mã năng lượng tối hậu!
-            </p>
-
-            <div className="pt-3 flex items-center justify-center gap-3">
-              <button
-                onClick={onBackToMap}
-                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600"
-              >
-                Về bản đồ
-              </button>
-              <button
-                onClick={() => {
-                  soundEngine.playUnlock();
-                  onCompleteStage2();
-                }}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-amber-400 text-slate-950 font-black text-sm shadow-[0_0_25px_#c084fc] hover:shadow-[0_0_35px_#facc15] flex items-center gap-2 btn-3d"
-              >
-                <span>TIẾN VÀO CHẶNG 3: GIẢI CỨU</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Stage 2 Complete Video Modal */}
+      <StageVideoModal
+        isOpen={isDoorOpenModal}
+        onClose={() => setIsDoorOpenModal(false)}
+        badge="CHIẾN CÔNG ĐỢT 2 · ĐỘT NHẬP THÀNH CÔNG VÀO TÀU UFO"
+        title="CỬA ÁP SUẤT ĐÃ MỞ – ĐỘT NHẬP TÀU UFO!"
+        description="Tuyệt vời! Cả 5 lớp khóa an ninh bảo mật áp suất đã bị các phi hành đoàn hóa giải hoàn toàn! Buồng cứu hộ hai bạn học sinh đã hiện ra trước mắt. Mời các phi hành đoàn xem đoạn phim đột nhập trước khi tiến vào giải cứu!"
+        videoUrl="https://drive.google.com/file/d/1JwjVNfsSEpSDLiTBd0JL_XxW8loYNu5u/preview"
+        themeColor="purple"
+        onBackToMap={onBackToMap}
+        onNextStage={() => {
+          soundEngine.playUnlock();
+          onCompleteStage2();
+        }}
+        nextStageButtonText="TIẾN VÀO CHẶNG 3: GIẢI CỨU"
+      />
     </div>
   );
 };

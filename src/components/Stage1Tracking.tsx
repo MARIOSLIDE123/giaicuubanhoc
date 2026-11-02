@@ -13,6 +13,7 @@ import { Team } from '../types/game';
 import { STAGE_1_QUESTIONS } from '../data/questions';
 import { soundEngine } from '../utils/sound';
 import { StageSidebar } from './StageSidebar';
+import { StageVideoModal } from './StageVideoModal';
 
 interface Stage1Props {
   teams: Team[];
@@ -477,48 +478,22 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
         </div>
       </main>
 
-      {/* Stage 1 Complete Modal */}
-      {isStageFinished && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
-          <div className="panel-cosmic border-2 border-cyan-400 rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl space-y-4 animate-scaleUp">
-            <div className="w-16 h-16 rounded-full bg-cyan-950 border-2 border-cyan-400 text-cyan-300 flex items-center justify-center mx-auto shadow-[0_0_35px_#22d3ee]">
-              <Radar className="w-8 h-8 animate-pulse" />
-            </div>
-
-            <div className="text-xs font-black uppercase tracking-widest text-amber-300">
-              CHIẾN CÔNG ĐỢT 1 HOÀN TẤT
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-white text-high-contrast">
-              TRUY VẾT TỌA ĐỘ THÀNH CÔNG!
-            </h3>
-
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
-              Tất cả 7 tín hiệu sóng radar đã được giải mã chính xác! Vị trí tàu UFO đã được khoanh vùng. 
-              Các phi hành đoàn chuẩn bị vũ khí toán học để đột nhập qua các lớp khóa bảo mật áp suất!
-            </p>
-
-            <div className="pt-3 flex items-center justify-center gap-3">
-              <button
-                onClick={onBackToMap}
-                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600"
-              >
-                Về bản đồ
-              </button>
-              <button
-                onClick={() => {
-                  soundEngine.playUnlock();
-                  onCompleteStage1();
-                }}
-                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-amber-400 text-slate-950 font-black text-sm shadow-[0_0_25px_#22d3ee] hover:shadow-[0_0_35px_#facc15] flex items-center gap-2 btn-3d"
-              >
-                <span>MỞ KHÓA CHẶNG 2: ĐỘT NHẬP</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Stage 1 Complete Video Modal */}
+      <StageVideoModal
+        isOpen={isStageFinished}
+        onClose={() => setIsStageFinished(false)}
+        badge="CHIẾN CÔNG ĐỢT 1 · HOÀN TẤT TRUY VẾT TÀU UFO"
+        title="TRUY VẾT TỌA ĐỘ UFO THÀNH CÔNG!"
+        description="Tất cả 7 tín hiệu sóng radar đã được giải mã chính xác! Vị trí tàu UFO đã được khoanh vùng. Mời các phi hành đoàn xem đoạn phim ghi nhận tín hiệu trước khi tiến vào chặng tiếp theo!"
+        videoUrl="https://drive.google.com/file/d/1RZGUP-gA6p2tyELNrm8xgroXg5IMGZje/preview"
+        themeColor="cyan"
+        onBackToMap={onBackToMap}
+        onNextStage={() => {
+          soundEngine.playUnlock();
+          onCompleteStage1();
+        }}
+        nextStageButtonText="MỞ KHÓA CHẶNG 2: ĐỘT NHẬP"
+      />
     </div>
   );
 };
