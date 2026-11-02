@@ -62,27 +62,47 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
     setSubResults({});
   }, [activeCodeIdx]);
 
-  // Helper function to check if input matches expected answer reasonably
-  const checkAnswerMatch = (input: string, expected: string): boolean => {
+  // Smart comparison between student input and preset canonical data
+  const checkAnswerMatch = (subId: string, input: string, expected: string): boolean => {
     const cleanIn = input.toLowerCase().replace(/,/g, '.').replace(/\s+/g, ' ').trim();
-    const cleanExp = expected.toLowerCase().replace(/,/g, '.').replace(/\s+/g, ' ').trim();
-
     if (!cleanIn) return false;
-    if (cleanIn === cleanExp) return true;
 
-    // Check if input is contained in expected or vice versa
-    if (cleanExp.includes(cleanIn) && cleanIn.length >= 2) return true;
+    // Per-question tailored precision checks matching exact math datasets
+    switch (subId) {
+      case 's3_m1_a': // x̄ = 35/9 ≈ 3.89
+        return cleanIn.includes('3.89') || cleanIn.includes('3.88') || cleanIn.includes('35/9') || cleanIn.includes('3.9');
+      case 's3_m1_b': // Me = 3, Mo = 3
+        return cleanIn.includes('3');
+      case 's3_m1_c': // Q1 = 2; Q2 = 3; Q3 = 4.5
+        return (cleanIn.includes('2') && cleanIn.includes('3')) || cleanIn.includes('4.5');
+      case 's3_m1_d': // 12 lớn bất thường làm tăng trung bình
+        return cleanIn.includes('12') || cleanIn.includes('bất thường') || cleanIn.includes('tăng') || cleanIn.includes('ngoại lai');
 
-    // Extract numbers and check overlap
-    const inNums = cleanIn.match(/[-+]?\d*\.?\d+/g) || [];
-    const expNums = cleanExp.match(/[-+]?\d*\.?\d+/g) || [];
-    if (inNums.length > 0 && expNums.length > 0) {
-      // Check if primary number matches
-      const numMatch = inNums.some(n => expNums.includes(n));
-      if (numMatch) return true;
+      case 's3_m2_a': // x̄ = 24.501,2; Me = 21.315; Mo = 20.120
+        return cleanIn.includes('24501') || cleanIn.includes('24.501') || cleanIn.includes('21315') || cleanIn.includes('21.315') || cleanIn.includes('20120');
+      case 's3_m2_b': // x̄ = 21.240; Me = 20.717,5; Mo = 20.120
+        return cleanIn.includes('21240') || cleanIn.includes('21.240') || cleanIn.includes('20717') || cleanIn.includes('20.717') || cleanIn.includes('20120');
+      case 's3_m2_c': // Số trung bình
+        return cleanIn.includes('trung bình') || cleanIn.includes('x̄') || cleanIn.includes('x') || cleanIn.includes('3261') || cleanIn.includes('3.261');
+
+      case 's3_m3_a': // x̄ = 7,875; Me = 8; Mo = 8
+        return cleanIn.includes('7.875') || cleanIn.includes('8') || cleanIn.includes('63/8');
+      case 's3_m3_b': // Đội A: IQR = 1,5. Đội B: IQR = 3
+        return cleanIn.includes('1.5') || cleanIn.includes('3');
+      case 's3_m3_c': // Đội A ổn định hơn
+        return cleanIn.includes('đội a') || cleanIn.includes('doi a') || cleanIn === 'a' || cleanIn.includes('đội 1');
+
+      default: {
+        const cleanExp = expected.toLowerCase().replace(/,/g, '.').replace(/\s+/g, ' ').trim();
+        if (cleanExp.includes(cleanIn) && cleanIn.length >= 2) return true;
+        const inNums = cleanIn.match(/[-+]?\d*\.?\d+/g) || [];
+        const expNums = cleanExp.match(/[-+]?\d*\.?\d+/g) || [];
+        if (inNums.length > 0 && expNums.length > 0) {
+          return inNums.some(n => expNums.includes(n));
+        }
+        return false;
+      }
     }
-
-    return false;
   };
 
   // Student / Teacher submits input
@@ -99,50 +119,27 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
     const teamName = activeTeam ? activeTeam.name : 'Đội';
 
     const expected = subItem.answer || (subItem as any).expectedAnswer || '';
-    const isCorrect = checkAnswerMatch(userInput, expected);
+    const isCorrect = checkAnswerMatch(subItem.id, userInput, expected);
 
     if (isCorrect) {
-      handleMarkCorrect(subItem, userInput, teamName);
+      soundEngine.playCorrect();
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.7 }
+      });
+      onAwardPoints(activeTeamId, subItem.points);
+      setSubResults(prev => ({
+        ...prev,
+        [subItem.id]: { status: 'correct', teamName, submittedAnswer: userInput }
+      }));
     } else {
-      handleMarkWrong(subItem, userInput, teamName);
-    }
-  };
-
-  // Direct Teacher verification: Mark as Correct
-  const handleMarkCorrect = (subItem: MultiPartItem, inputOverride?: string, teamOverride?: string) => {
-    if (!activeTeamId) {
       soundEngine.playWrong();
-      return;
+      setSubResults(prev => ({
+        ...prev,
+        [subItem.id]: { status: 'wrong', teamName, submittedAnswer: userInput }
+      }));
     }
-
-    const activeTeam = teams.find(t => t.id === activeTeamId);
-    const teamName = teamOverride || (activeTeam ? activeTeam.name : 'Đội');
-    const inputVal = inputOverride || inputAnswers[subItem.id] || 'Đã xác nhận';
-
-    soundEngine.playCorrect();
-    confetti({
-      particleCount: 50,
-      spread: 60,
-      origin: { y: 0.7 }
-    });
-    onAwardPoints(activeTeamId, subItem.points);
-    setSubResults(prev => ({
-      ...prev,
-      [subItem.id]: { status: 'correct', teamName, submittedAnswer: inputVal }
-    }));
-  };
-
-  // Direct Teacher verification: Mark as Wrong
-  const handleMarkWrong = (subItem: MultiPartItem, inputOverride?: string, teamOverride?: string) => {
-    const activeTeam = teams.find(t => t.id === activeTeamId);
-    const teamName = teamOverride || (activeTeam ? activeTeam.name : 'Đội');
-    const inputVal = inputOverride || inputAnswers[subItem.id] || '';
-
-    soundEngine.playWrong();
-    setSubResults(prev => ({
-      ...prev,
-      [subItem.id]: { status: 'wrong', teamName, submittedAnswer: inputVal }
-    }));
   };
 
   // Replayability: Reset sub-question so another team can try
@@ -200,7 +197,7 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
   const activeTeam = teams.find(t => t.id === activeTeamId);
 
   return (
-    <div className="relative h-[calc(100vh-68px)] max-w-[1880px] mx-auto p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-68px)] p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
       {/* LEFT COLUMN: Fixed Sidebar with Scoreboard, Team Selector, Timer, Controls */}
       <StageSidebar
         teams={teams}
@@ -492,14 +489,16 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
 
                             {/* Wrong attempt notice */}
                             {res?.status === 'wrong' && (
-                              <div className="text-xs text-red-300 font-bold flex items-center gap-1.5">
-                                <AlertTriangle className="w-3.5 h-3.5" />
-                                <span>{res.teamName} nhập "{res.submittedAnswer}" chưa chính xác! Đội khác có quyền giành quyền trả lời.</span>
+                              <div className="text-xs text-red-300 font-bold flex flex-wrap items-center gap-2 pt-1 animate-pulse">
+                                <span className="px-2 py-0.5 rounded-md bg-red-950 border border-red-500 text-red-200 font-black">
+                                  ✕ "{res.submittedAnswer}" (CHƯA ĐÚNG)
+                                </span>
+                                <span>{res.teamName} nhập chưa khớp! Chuyển quyền cho đội khác thử lại.</span>
                               </div>
                             )}
                           </div>
 
-                          {/* Evaluation Status & Teacher Override Buttons */}
+                          {/* Evaluation Status & Retry Button (Pure comparison, no teacher override) */}
                           <div className="flex items-center gap-1.5 shrink-0 self-end md:self-center">
                             {res?.status === 'correct' ? (
                               <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-black text-xs flex items-center gap-1.5 shadow">
@@ -509,31 +508,13 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
                             ) : res?.status === 'wrong' ? (
                               <button
                                 onClick={() => handleRetrySub(sub.id)}
-                                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-white font-black text-xs flex items-center gap-1.5 shadow hover:shadow-red-500/50 btn-3d"
+                                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-white font-black text-xs flex items-center gap-1.5 shadow hover:shadow-red-500/50 btn-3d"
                                 title="Cho đội khác nhập lại"
                               >
                                 <RotateCcw className="w-3.5 h-3.5" />
                                 <span>Đội khác thử lại</span>
                               </button>
-                            ) : (
-                              /* Teacher quick override buttons */
-                              <div className="flex items-center gap-1">
-                                <button
-                                  onClick={() => handleMarkCorrect(sub)}
-                                  className="px-2.5 py-1 rounded-lg bg-emerald-950/80 hover:bg-emerald-800 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold transition-all"
-                                  title="Giáo viên duyệt đúng nhanh"
-                                >
-                                  Duyệt đúng
-                                </button>
-                                <button
-                                  onClick={() => handleMarkWrong(sub)}
-                                  className="px-2.5 py-1 rounded-lg bg-red-950/80 hover:bg-red-800 text-red-300 border border-red-500/40 text-[11px] font-bold transition-all"
-                                  title="Giáo viên báo sai nhanh"
-                                >
-                                  Báo sai
-                                </button>
-                              </div>
-                            )}
+                            ) : null}
                           </div>
                         </div>
                       );

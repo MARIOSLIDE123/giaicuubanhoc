@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   Shield, Lock, Unlock, CheckCircle, HelpCircle, 
-  ArrowRight, Sparkles, Check, X, RotateCcw
+  ArrowRight, Sparkles, Check, X, RotateCcw, AlertTriangle
 } from 'lucide-react';
 import { Team, MultiPartItem } from '../types/game';
 import { STAGE_2_QUESTIONS } from '../data/questions';
@@ -144,7 +144,7 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
   const activeTeam = teams.find(t => t.id === activeTeamId);
 
   return (
-    <div className="relative h-[calc(100vh-68px)] max-w-[1880px] mx-auto p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-68px)] p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
       {/* LEFT COLUMN: Fixed Sidebar with Scoreboard, Team Selector, Timer, Controls */}
       <StageSidebar
         teams={teams}
@@ -393,9 +393,11 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
 
                             {/* Wrong attempt message */}
                             {res?.status === 'wrong' && (
-                              <div className="text-xs text-red-300 font-bold flex items-center gap-1.5">
-                                <AlertTriangle className="w-3.5 h-3.5" />
-                                <span>{res.teamName} chọn sai! Các đội khác có thể bấm Thử lại để trả lời.</span>
+                              <div className="text-xs text-red-300 font-bold flex flex-wrap items-center gap-2 pt-1 animate-pulse">
+                                <span className="px-2 py-0.5 rounded-md bg-red-950 border border-red-500 text-red-200 font-black">
+                                  ✕ {res.choice} (CHƯA CHÍNH XÁC)
+                                </span>
+                                <span>{res.teamName} trả lời sai! Chuyển quyền cho đội khác thử lại.</span>
                               </div>
                             )}
                           </div>

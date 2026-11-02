@@ -58,6 +58,7 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
   const [isHintShown, setIsHintShown] = useState(false);
   const [isStageFinished, setIsStageFinished] = useState(false);
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState<boolean | null>(null);
+  const [wrongOptionIds, setWrongOptionIds] = useState<string[]>([]);
 
   const currentQ = questionsList[currentIndex] || questionsList[0];
 
@@ -80,10 +81,12 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
     setIsSolutionShown(false);
     setIsHintShown(false);
     setLastAnswerCorrect(null);
+    setWrongOptionIds([]);
   }, [currentQ.id]);
 
   const handleSelectOption = (optId: string) => {
     if (isAnswerChecked && lastAnswerCorrect) return;
+    if (wrongOptionIds.includes(optId)) return;
     soundEngine.playClick();
     setSelectedOptionId(optId);
   };
@@ -114,6 +117,7 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
     } else {
       setLastAnswerCorrect(false);
       soundEngine.playWrong();
+      setWrongOptionIds(prev => prev.includes(chosen.id) ? prev : [...prev, chosen.id]);
     }
   };
 
@@ -154,7 +158,7 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
   ];
 
   return (
-    <div className="relative h-[calc(100vh-68px)] max-w-[1880px] mx-auto p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
+    <div className="relative w-full h-[calc(100vh-68px)] p-3 sm:p-4 z-10 flex gap-4 overflow-hidden">
       {/* LEFT COLUMN: Fixed Sidebar with Scoreboard, Team Selector, Timer, Controls */}
       <StageSidebar
         teams={teams}
@@ -358,31 +362,43 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
                 {currentOptions.map((opt, idx) => {
                   const letter = ['A', 'B', 'C', 'D'][idx] || String(idx + 1);
                   const isSelected = selectedOptionId === opt.id;
-                  const showResult = isAnswerChecked;
+                  const isWrongEliminated = wrongOptionIds.includes(opt.id);
                   const isCorrectOpt = opt.isCorrect;
 
                   let btnStyle = 'bg-slate-900/85 border-slate-700 text-slate-100 hover:border-cyan-400 hover:bg-slate-800/90';
                   if (isSelected) {
                     btnStyle = 'bg-blue-900/60 border-cyan-300 text-white shadow-[0_0_20px_rgba(34,211,238,0.5)] ring-2 ring-cyan-400';
                   }
-                  if (showResult) {
+
+                  // Only show green if user actually answered correctly OR teacher toggled solution!
+                  if (lastAnswerCorrect === true || isSolutionShown) {
                     if (isCorrectOpt) {
                       btnStyle = 'bg-emerald-950/90 border-emerald-400 text-emerald-100 ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)]';
-                    } else if (isSelected && !isCorrectOpt) {
-                      btnStyle = 'bg-red-950/90 border-red-500 text-red-100 ring-2 ring-red-500';
                     }
+                  }
+
+                  // If this option was wrong and eliminated, show red
+                  if (isWrongEliminated) {
+                    btnStyle = 'bg-red-950/60 border-red-500/80 text-red-300 opacity-60 cursor-not-allowed';
+                  } else if (isAnswerChecked && lastAnswerCorrect === false && isSelected) {
+                    btnStyle = 'bg-red-950/90 border-red-500 text-red-100 ring-2 ring-red-500 animate-pulse';
                   }
 
                   return (
                     <button
                       key={opt.id}
                       onClick={() => handleSelectOption(opt.id)}
+                      disabled={isWrongEliminated || (isAnswerChecked && lastAnswerCorrect === true)}
                       className={`w-full p-2.5 sm:p-3 rounded-xl border text-left transition-all flex items-start gap-2.5 btn-3d shadow-md ${btnStyle}`}
                     >
                       <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs shrink-0 shadow ${
-                        isSelected ? 'bg-cyan-400 text-slate-950' : 'bg-slate-800 text-slate-200 border border-slate-700'
+                        isWrongEliminated
+                          ? 'bg-red-900/80 text-red-200 border border-red-500/50'
+                          : isSelected 
+                            ? 'bg-cyan-400 text-slate-950' 
+                            : 'bg-slate-800 text-slate-200 border border-slate-700'
                       }`}>
-                        {letter}
+                        {isWrongEliminated ? '✕' : letter}
                       </span>
                       <div className="flex-1 text-xs sm:text-sm font-bold leading-relaxed text-high-contrast pt-0.5">
                         {opt.text}
