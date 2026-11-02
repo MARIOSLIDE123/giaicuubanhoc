@@ -42,15 +42,15 @@ export const VictoryPodium: React.FC<VictoryPodiumProps> = ({
   return (
     <div className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between py-6 px-4 sm:px-8 xl:px-12 w-full max-w-[1750px] mx-auto z-10 text-center space-y-6">
       {/* Header Banner */}
-      <div className="space-y-2">
-        <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-amber-950/80 border border-amber-400/60 text-amber-300 text-xs sm:text-sm font-black tracking-widest uppercase shadow-lg">
+      <div className="flex flex-col items-center gap-3.5 pt-2">
+        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-amber-950/80 border border-amber-400/60 text-amber-300 text-xs sm:text-sm font-black tracking-widest uppercase shadow-lg">
           <Sparkles className="w-4 h-4" />
           LỄ TRAO GIẢI VÀ VINH DANH CHIẾN DỊCH VŨ TRỤ
         </div>
-        <h1 className="text-3xl sm:text-5xl xl:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-amber-300 drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]">
+        <h1 className="text-3xl sm:text-4xl xl:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-100 to-amber-300 drop-shadow-[0_4px_25px_rgba(0,0,0,0.95)] leading-normal py-3 px-2 tracking-normal">
           CHIẾN DỊCH GIẢI CỨU HOÀN TẤT XUẤT SẮC!
         </h1>
-        <p className="text-sm sm:text-base text-slate-200 max-w-2xl mx-auto font-medium text-high-contrast">
+        <p className="text-sm sm:text-base text-slate-200 max-w-3xl mx-auto font-medium text-high-contrast leading-relaxed">
           Tuyên dương tinh thần đoàn kết, tư duy logic sắc bén và khả năng xử lý số liệu thống kê chuẩn xác của toàn thể các đội cứu hộ Trái Đất!
         </p>
       </div>
