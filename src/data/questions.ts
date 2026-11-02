@@ -243,7 +243,7 @@ export const STAGE_2_QUESTIONS: Question[] = [
     dataset: [6, 8, 8, 10, 13],
     unit: 'GW',
     contextDesc: 'Chỉ số đo xung năng lượng của 5 lõi phản ứng ion phụ trên tàu UFO.',
-    questionText: 'Tính số trung bình, trung vị, mốt, Q1 và Q3 để mở mã năng lượng lớp 1.',
+    questionText: 'Xét tính ĐÚNG / SAI của 4 khẳng định dưới đây về mẫu số liệu [6, 8, 8, 10, 13]:',
     difficulty: 'Thông hiểu',
     defaultTimeSeconds: 45,
     points: 20,
@@ -256,18 +256,16 @@ export const STAGE_2_QUESTIONS: Question[] = [
       q3: 11.5,
     },
     subQuestions: [
-      { id: 's2_l1_a', label: 'a) Số trung bình (x̄)', prompt: 'Tính số trung bình của 5 lõi năng lượng:', answer: 9, points: 5 },
-      { id: 's2_l1_b', label: 'b) Trung vị (Me)', prompt: 'Tìm trung vị của mẫu số liệu:', answer: 8, points: 5 },
-      { id: 's2_l1_c', label: 'c) Mốt (Mo)', prompt: 'Tìm mốt của mẫu số liệu:', answer: 8, points: 5 },
-      { id: 's2_l1_d', label: 'd) Tứ phân vị Q1 & Q3', prompt: 'Tính Q1 và Q3:', answer: 'Q1 = 7, Q3 = 11,5', points: 5 },
+      { id: 's2_l1_a', label: 'Khẳng định a', prompt: 'Số trung bình của mẫu số liệu bằng 9 (x̄ = 45/5 = 9)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l1_b', label: 'Khẳng định b', prompt: 'Trung vị của mẫu số liệu bằng 10 (Me = 10)', answer: 'SAI', points: 5 },
+      { id: 's2_l1_c', label: 'Khẳng định c', prompt: 'Mốt của mẫu số liệu bằng 8 (Mo = 8 vì lặp lại 2 lần)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l1_d', label: 'Khẳng định d', prompt: 'Tứ phân vị thứ nhất Q1 bằng 8 (Q1 = 8)', answer: 'SAI', points: 5 },
     ],
-    hint: 'Dãy đã được sắp xếp sẵn: 6; 8; 8; 10; 13. n = 5 lẻ nên Q2 = 8. Nửa dưới [6, 8], nửa trên [10, 13].',
-    solution: `1) Số trung bình: x̄ = (6 + 8 + 8 + 10 + 13) / 5 = 45 / 5 = 9.
-2) Trung vị: n = 5 => Me = 8 (số thứ 3).
-3) Mốt: Mo = 8 (xuất hiện 2 lần).
-4) Tứ phân vị:
-- Bỏ Q2 = 8, nửa dưới là [6; 8] => Q1 = (6 + 8) / 2 = 7.
-- Nửa trên là [10; 13] => Q3 = (10 + 13) / 2 = 11,5.`,
+    hint: 'Sắp xếp sẵn: 6; 8; 8; 10; 13. n = 5 lẻ. Q2 = 8. Nửa dưới [6, 8] => Q1 = 7. Nửa trên [10, 13] => Q3 = 11,5.',
+    solution: `1) Số trung bình: x̄ = (6 + 8 + 8 + 10 + 13) / 5 = 45 / 5 = 9 => a ĐÚNG.
+2) Trung vị: n = 5 lẻ => Me = 8 (số thứ 3) => b SAI (vì khẳng định Me = 10).
+3) Mốt: Mo = 8 (xuất hiện 2 lần nhiều nhất) => c ĐÚNG.
+4) Tứ phân vị: Nửa dưới là [6; 8] => Q1 = (6 + 8) / 2 = 7 => d SAI (vì khẳng định Q1 = 8).`,
   },
   {
     id: 's2_lock2',
@@ -277,7 +275,7 @@ export const STAGE_2_QUESTIONS: Question[] = [
     dataset: [220, 240, 250, 250, 260, 270, 900],
     unit: 'nghìn đồng',
     contextDesc: 'Giá niêm yết của 7 linh kiện bảo an tàu vũ trụ (nghìn đồng).',
-    questionText: 'Tính số trung bình, trung vị và lựa chọn đại lượng phù hợp hơn để mô tả mức giá thông thường kèm giải thích.',
+    questionText: 'Xét tính ĐÚNG / SAI của 4 khẳng định dưới đây về mẫu số liệu [220, 240, 250, 250, 260, 270, 900]:',
     difficulty: 'Vận dụng',
     defaultTimeSeconds: 60,
     points: 20,
@@ -290,14 +288,16 @@ export const STAGE_2_QUESTIONS: Question[] = [
       outlierNote: '900 là giá trị bất thường',
     },
     subQuestions: [
-      { id: 's2_l2_a', label: 'a) Số trung bình', prompt: 'Tính số trung bình (làm tròn 2 chữ số thập phân):', answer: 341.43, points: 5 },
-      { id: 's2_l2_b', label: 'b) Trung vị & Mốt', prompt: 'Tìm trung vị và mốt:', answer: 'Trung vị = 250, Mốt = 250', points: 5 },
-      { id: 's2_l2_c', label: 'c) Đại lượng phù hợp', prompt: 'Chọn đại lượng phù hợp và giải thích:', answer: 'Trung vị (do có giá trị bất thường 900)', points: 10 },
+      { id: 's2_l2_a', label: 'Khẳng định a', prompt: 'Số trung bình của mẫu xấp xỉ bằng 341,43 nghìn đồng', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l2_b', label: 'Khẳng định b', prompt: 'Trung vị của mẫu số liệu bằng 260 nghìn đồng', answer: 'SAI', points: 5 },
+      { id: 's2_l2_c', label: 'Khẳng định c', prompt: 'Giá trị 900 nghìn đồng là giá trị bất thường (ngoại lai)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l2_d', label: 'Khẳng định d', prompt: 'Số trung bình mô tả mức giá thông thường tốt hơn trung vị', answer: 'SAI', points: 5 },
     ],
-    hint: 'Tổng 7 số = 2390. Chia cho 7 ra 341,43. Nhận xét giá trị 900 cao gấp gần 4 lần các linh kiện còn lại!',
-    solution: `1) Số trung bình: x̄ = (220 + 240 + 250 + 250 + 260 + 270 + 900) / 7 = 2390 / 7 ≈ 341,43 (nghìn đồng).
-2) Trung vị: Dãy đã sắp xếp có 7 số nên Me = 250 (số thứ 4). Mốt Mo = 250.
-3) Lựa chọn: Giá trị 900 nghìn đồng là giá trị bất thường (quá lớn). Số trung bình 341,43 cao hơn 6 trong số 7 thiết bị. Vì vậy trung vị Me = 250 phản ánh chính xác hơn mức giá thông thường.`,
+    hint: 'Tổng 7 số = 2390. Chia 7 ra 341,43. n = 7 lẻ nên trung vị là số thứ 4: Me = 250. Số 900 quá lớn kéo lệch trung bình.',
+    solution: `1) Số trung bình: x̄ = 2390 / 7 ≈ 341,43 => a ĐÚNG.
+2) Trung vị: Số thứ 4 là Me = 250 => b SAI (vì khẳng định Me = 260).
+3) Giá trị 900 lớn gấp gần 4 lần nhóm còn lại => 900 là giá trị bất thường => c ĐÚNG.
+4) Do có giá trị 900 kéo số trung bình lên cao hơn 6/7 số liệu, trung vị 250 mô tả chính xác hơn => d SAI.`,
   },
   {
     id: 's2_lock3',
@@ -306,11 +306,11 @@ export const STAGE_2_QUESTIONS: Question[] = [
     signalName: 'KHÓA 3 – HỆ THỐNG ĐƯỜNG CHUYỀN',
     dataset: [18, 20, 22, 24, 26],
     unit: 'đường chuyền',
-    contextDesc: 'Số đường chuyền liên lạc mã hóa thành công giữa các tháp phát tín hiệu trong 5 phiên.',
-    questionText: 'Tính số trung bình, trung vị và đưa ra nhận xét so sánh giữa hai giá trị này.',
+    contextDesc: 'Số đường chuyền liên lạc mã hóa thành công giữa các trạm phát trong 5 phiên.',
+    questionText: 'Xét tính ĐÚNG / SAI của 4 khẳng định dưới đây về mẫu số liệu [18, 20, 22, 24, 26]:',
     difficulty: 'Thông hiểu',
     defaultTimeSeconds: 45,
-    points: 15,
+    points: 20,
     type: 'stepped-analysis',
     statsBreakdown: {
       mean: 22,
@@ -318,15 +318,16 @@ export const STAGE_2_QUESTIONS: Question[] = [
       mode: 'Không có mốt',
     },
     subQuestions: [
-      { id: 's2_l3_a', label: 'a) Số trung bình', prompt: 'Tính số trung bình:', answer: 22, points: 5 },
-      { id: 's2_l3_b', label: 'b) Trung vị', prompt: 'Tìm trung vị của mẫu số liệu:', answer: 22, points: 5 },
-      { id: 's2_l3_c', label: 'c) Nhận xét so sánh', prompt: 'So sánh và giải thích hiện tượng này:', answer: 'x̄ = Me = 22 (dãy số cách đều đối xứng)', points: 5 },
+      { id: 's2_l3_a', label: 'Khẳng định a', prompt: 'Số trung bình của mẫu số liệu bằng 22 (x̄ = 110/5 = 22)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l3_b', label: 'Khẳng định b', prompt: 'Mẫu số liệu có mốt duy nhất bằng 22 (Mo = 22)', answer: 'SAI', points: 5 },
+      { id: 's2_l3_c', label: 'Khẳng định c', prompt: 'Trung vị của mẫu số liệu bằng đúng 22 (Me = 22)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l3_d', label: 'Khẳng định d', prompt: 'Khoảng tứ phân vị IQR của mẫu số liệu bằng 8', answer: 'SAI', points: 5 },
     ],
-    hint: 'Nhận xét: Đây là cấp số cộng có khoảng cách đều 2 đơn vị, đối xứng hoàn hảo qua số chính giữa 22.',
-    solution: `1) Số trung bình: x̄ = (18 + 20 + 22 + 24 + 26) / 5 = 110 / 5 = 22.
-2) Trung vị: Me = 22 (số ở vị trí chính giữa).
-3) Mốt: Không có mốt do mỗi số xuất hiện duy nhất 1 lần.
-4) Nhận xét: Số trung bình và trung vị bằng nhau (x̄ = Me = 22) vì mẫu số liệu là dãy số cách đều, phân bố hoàn toàn đối xứng qua điểm trung tâm.`,
+    hint: 'Dãy cách đều 2 đơn vị đối xứng qua 22. Mỗi số xuất hiện 1 lần nên KHÔNG có mốt. Q1 = 19, Q3 = 25 => IQR = 6.',
+    solution: `1) Số trung bình: x̄ = 110 / 5 = 22 => a ĐÚNG.
+2) Mốt: Mỗi giá trị chỉ xuất hiện 1 lần nên mẫu số liệu KHÔNG CÓ MỐT => b SAI.
+3) Trung vị: Số thứ 3 là Me = 22 => c ĐÚNG.
+4) Tứ phân vị: Q1 = (18+20)/2 = 19; Q3 = (24+26)/2 = 25 => IQR = 25 - 19 = 6 => d SAI (vì khẳng định IQR = 8).`,
   },
   {
     id: 's2_lock4',
@@ -336,7 +337,7 @@ export const STAGE_2_QUESTIONS: Question[] = [
     dataset: [12, 13, 14, 14, 15, 16, 45],
     unit: 'μm',
     contextDesc: 'Sai số thiết bị ghi nhận vị trí trục quay cửa áp suất UFO.',
-    questionText: 'Tính số trung bình, tìm trung vị và mốt, sau đó giải thích vì sao trung vị phù hợp hơn.',
+    questionText: 'Xét tính ĐÚNG / SAI của 4 khẳng định dưới đây về mẫu số liệu [12, 13, 14, 14, 15, 16, 45]:',
     difficulty: 'Vận dụng',
     defaultTimeSeconds: 45,
     points: 20,
@@ -349,15 +350,16 @@ export const STAGE_2_QUESTIONS: Question[] = [
       outlierNote: '45 là giá trị bất thường kéo số trung bình lên cao',
     },
     subQuestions: [
-      { id: 's2_l4_a', label: 'a) Số trung bình', prompt: 'Tính số trung bình (làm tròn 2 chữ số thập phân):', answer: 18.43, points: 5 },
-      { id: 's2_l4_b', label: 'b) Trung vị và Mốt', prompt: 'Tìm trung vị và mốt:', answer: 'Trung vị = 14, Mốt = 14', points: 5 },
-      { id: 's2_l4_c', label: 'c) Giải thích lựa chọn', prompt: 'Giải thích tại sao trung vị mô tả tốt hơn số trung bình:', answer: 'Do 45 là giá trị bất thường kéo trung bình lên 18,43', points: 10 },
+      { id: 's2_l4_a', label: 'Khẳng định a', prompt: 'Số trung bình của mẫu xấp xỉ bằng 18,43 (x̄ ≈ 18,43)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l4_b', label: 'Khẳng định b', prompt: 'Mốt của mẫu số liệu bằng 45 (Mo = 45)', answer: 'SAI', points: 5 },
+      { id: 's2_l4_c', label: 'Khẳng định c', prompt: 'Trung vị Me = 14 mô tả sai số phổ biến tốt hơn số trung bình', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l4_d', label: 'Khẳng định d', prompt: 'Nếu loại bỏ giá trị 45 thì trung vị của mẫu sẽ thay đổi lớn', answer: 'SAI', points: 5 },
     ],
-    hint: 'Tổng 7 số = 129. 129 / 7 ≈ 18,43. Giá trị 45 vượt trội hẳn so với nhóm 12 - 16.',
-    solution: `1) Số trung bình: x̄ = (12 + 13 + 14 + 14 + 15 + 16 + 45) / 7 = 129 / 7 ≈ 18,43.
-2) Trung vị: Me = 14 (vị trí thứ 4).
-3) Mốt: Mo = 14 (xuất hiện 2 lần).
-4) Giải thích: Giá trị 45 là giá trị bất thường (outlier) làm cho số trung bình tăng vọt lên 18,43, cao hơn 6/7 số liệu còn lại. Trung vị 14 phản ánh trung thực mức độ sai số thông thường của cảm biến.`,
+    hint: 'Tổng 7 số = 129 => x̄ ≈ 18,43. Số 14 xuất hiện 2 lần nên Mo = 14. Bỏ 45 thì 6 số còn lại vẫn có Me = 14.',
+    solution: `1) Số trung bình: x̄ = 129 / 7 ≈ 18,43 => a ĐÚNG.
+2) Mốt: Số 14 xuất hiện 2 lần => Mo = 14 => b SAI (vì khẳng định Mo = 45).
+3) Do có giá trị ngoại lai 45 làm trung bình tăng cao (18,43), trung vị 14 phản ánh trung thực hơn => c ĐÚNG.
+4) Bỏ 45, còn 6 số: 12, 13, 14, 14, 15, 16 => Me mới = (14+14)/2 = 14 không đổi => d SAI.`,
   },
   {
     id: 's2_lock5',
@@ -367,7 +369,7 @@ export const STAGE_2_QUESTIONS: Question[] = [
     dataset: [2, 4, 4, 5, 6, 7, 8, 10],
     unit: 'năm ánh sáng',
     contextDesc: 'Dữ liệu khoảng cách góc phân bố 8 chòm sao hộ tống UFO.',
-    questionText: 'Tìm Q1, Q2, Q3 và xác định khoảng chứa 50% số liệu nằm giữa hai tứ phân vị.',
+    questionText: 'Xét tính ĐÚNG / SAI của 4 khẳng định dưới đây về mẫu số liệu [2, 4, 4, 5, 6, 7, 8, 10]:',
     difficulty: 'Thông hiểu',
     defaultTimeSeconds: 45,
     points: 20,
@@ -379,17 +381,16 @@ export const STAGE_2_QUESTIONS: Question[] = [
       iqr: 3.5,
     },
     subQuestions: [
-      { id: 's2_l5_a', label: 'a) Q1, Q2, Q3', prompt: 'Tìm các tứ phân vị:', answer: 'Q1 = 4; Q2 = 5,5; Q3 = 7,5', points: 10 },
-      { id: 's2_l5_b', label: 'b) Khoảng 50% số liệu ở giữa', prompt: 'Xác định khoảng chứa 50% số liệu nằm giữa hai tứ phân vị:', answer: 'Từ 4 đến 7,5 (Khoảng tứ phân vị IQR = 3,5)', points: 10 },
+      { id: 's2_l5_a', label: 'Khẳng định a', prompt: 'Tứ phân vị thứ hai (trung vị Q2) bằng 5,5', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l5_b', label: 'Khẳng định b', prompt: 'Tứ phân vị thứ nhất Q1 bằng 5 (Q1 = 5)', answer: 'SAI', points: 5 },
+      { id: 's2_l5_c', label: 'Khẳng định c', prompt: 'Tứ phân vị thứ ba Q3 bằng 7,5 (Q3 = 7,5)', answer: 'ĐÚNG', points: 5 },
+      { id: 's2_l5_d', label: 'Khẳng định d', prompt: 'Khoảng tứ phân vị IQR bằng 5,5 (IQR = 5,5)', answer: 'SAI', points: 5 },
     ],
-    hint: 'n = 8 chẵn. Nửa dưới gồm 4 số: [2, 4, 4, 5] => Q1 = (4+4)/2 = 4. Nửa trên [6, 7, 8, 10] => Q3 = (7+8)/2 = 7,5.',
-    solution: `1) Mẫu số liệu đã sắp xếp: 2; 4; 4; 5; 6; 7; 8; 10 (n = 8).
-2) Q2 (Trung vị): Me = (5 + 6) / 2 = 5,5.
-3) Tứ phân vị:
-- Nửa dưới [2; 4; 4; 5] => Q1 = (4 + 4) / 2 = 4.
-- Nửa trên [6; 7; 8; 10] => Q3 = (7 + 8) / 2 = 7,5.
-4) Khoảng chứa 50% số liệu ở giữa là đoạn [Q1; Q3] = [4; 7,5].
-Khoảng tứ phân vị: ΔQ = Q3 - Q1 = 7,5 - 4 = 3,5.`,
+    hint: 'n = 8 chẵn. Nửa dưới [2, 4, 4, 5] => Q1 = 4. Nửa trên [6, 7, 8, 10] => Q3 = 7,5. IQR = 7,5 - 4 = 3,5.',
+    solution: `1) Trung vị: Q2 = (5 + 6) / 2 = 5,5 => a ĐÚNG.
+2) Q1: Nửa dưới là [2; 4; 4; 5] => Q1 = (4 + 4) / 2 = 4 => b SAI (vì khẳng định Q1 = 5).
+3) Q3: Nửa trên là [6; 7; 8; 10] => Q3 = (7 + 8) / 2 = 7,5 => c ĐÚNG.
+4) Khoảng tứ phân vị: IQR = Q3 - Q1 = 7,5 - 4 = 3,5 => d SAI (vì khẳng định IQR = 5,5).`,
   },
 ];
 
