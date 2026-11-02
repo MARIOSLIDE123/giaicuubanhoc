@@ -25,7 +25,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between py-6 px-4 sm:px-8 lg:px-12 xl:px-16 w-full max-w-[1750px] mx-auto z-10">
+    <div className="relative min-h-[calc(100vh-68px)] flex flex-col justify-between py-6 px-4 sm:px-8 lg:px-12 xl:px-16 w-full max-w-[1780px] mx-auto z-10">
       {/* Top Banner Tag */}
       <div className="flex justify-center items-center">
         <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full panel-cosmic border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-black tracking-widest uppercase shadow-xl animate-pulse">
@@ -35,45 +35,50 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       </div>
 
       {/* Hero Visual Area: UFO Trapped Students & Action Panel in 16:9 Widescreen */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-12 my-auto py-4">
-        {/* Left UFO Illustration: Widescreen Spotlight */}
-        <div className="lg:col-span-6 xl:col-span-7 flex flex-col items-center justify-center">
-          <div className="relative flex items-center justify-center p-4">
-            {/* Hologram radar rings around UFO */}
-            <div className="absolute inset-0 rounded-full border border-cyan-400/20 animate-ping opacity-20 pointer-events-none" />
-            <div className="absolute -inset-10 rounded-full border border-purple-500/25 pointer-events-none" />
-            <div className="absolute -inset-20 rounded-full border border-cyan-400/10 pointer-events-none" />
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-10 xl:gap-14 my-auto py-4">
+        {/* Left UFO Illustration: 3D Cute Students Trapped in Cockpit Dome (5 cols) */}
+        <div className="lg:col-span-5 flex flex-col items-center justify-center">
+          <div className="relative flex items-center justify-center p-2 w-full">
+            {/* Hologram cosmic rings around UFO */}
+            <div className="absolute inset-0 rounded-full border border-cyan-400/20 animate-ping opacity-25 pointer-events-none" />
+            <div className="absolute -inset-8 rounded-full border border-purple-500/30 pointer-events-none" />
             
-            <UfoRescueIllustration state="trapped" className="w-80 sm:w-96 md:w-[520px] xl:w-[600px] h-64 sm:h-80 xl:h-96 drop-shadow-[0_20px_50px_rgba(34,211,238,0.35)]" />
+            <UfoRescueIllustration
+              state="trapped"
+              className="w-72 sm:w-96 md:w-[460px] lg:w-[420px] xl:w-[480px] 2xl:w-[540px] h-auto drop-shadow-[0_20px_50px_rgba(217,70,239,0.5)]"
+            />
           </div>
 
-          <div className="mt-4 text-xs sm:text-sm text-slate-100 font-semibold flex items-center gap-2.5 panel-cosmic px-5 py-2.5 rounded-full border border-red-500/50 shadow-xl">
+          <div className="mt-3 text-xs sm:text-sm text-slate-100 font-semibold flex items-center gap-2.5 panel-cosmic px-5 py-2 rounded-full border border-red-500/50 shadow-xl">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
             <span className="text-high-contrast">Tín hiệu khẩn cấp: Hai bạn học sinh đang chờ các phi hành đoàn giải mã để thoát khỏi UFO!</span>
           </div>
         </div>
 
-        {/* Right Hero Text & Direct Mission Actions */}
-        <div className="lg:col-span-6 xl:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-          {/* Main 3D Title */}
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-cyan-950/70 border border-cyan-400/40 text-cyan-300 text-xs font-black tracking-widest uppercase">
+        {/* Right Hero Text & Direct Mission Actions (7 cols to keep title strictly 1 line) */}
+        <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          {/* Main 3D Title - STRICTLY ON 1 SINGLE LINE */}
+          <div className="space-y-2 w-full">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-cyan-950/80 border border-cyan-400/40 text-cyan-300 text-xs font-black tracking-widest uppercase shadow">
               <Radio className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
               CHIẾN DỊCH GIẢI CỨU KHÔNG GIAN
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-amber-300 drop-shadow-[0_6px_24px_rgba(0,0,0,0.9)]">
+            
+            {/* Title Guaranteed on 1 Line */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-200 to-amber-300 drop-shadow-[0_6px_24px_rgba(0,0,0,0.95)] whitespace-nowrap">
               GIẢI CỨU BẠN HỌC
             </h1>
-            <div className="text-lg sm:text-xl font-black tracking-wider text-amber-300 uppercase flex items-center justify-center lg:justify-start gap-3">
+
+            <div className="text-base sm:text-lg font-black tracking-wider text-amber-300 uppercase flex items-center justify-center lg:justify-start gap-3 pt-0.5">
               <span className="text-high-contrast">🛸 UFO RESCUE MISSION</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-blue-600/40 text-cyan-200 border border-cyan-300/40 font-bold">
+              <span className="text-xs px-2.5 py-0.5 rounded-md bg-blue-600/40 text-cyan-200 border border-cyan-300/40 font-bold">
                 TOÁN 10 THPT
               </span>
             </div>
           </div>
 
           {/* Mission summary description with crystal clear contrast */}
-          <div className="panel-cosmic rounded-2xl p-5 border border-cyan-500/30 shadow-2xl space-y-3">
+          <div className="panel-cosmic rounded-2xl p-5 border border-cyan-500/30 shadow-2xl space-y-3 w-full">
             <div className="flex items-center gap-2 text-xs font-black uppercase text-cyan-300 tracking-wider">
               <Compass className="w-4 h-4 text-amber-400" />
               MỤC TIÊU CHIẾN DỊCH
@@ -87,15 +92,15 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             </p>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons Row */}
           <div className="w-full flex flex-col sm:flex-row items-stretch lg:items-center gap-4 pt-2">
-            {/* Primary Big Start Button */}
+            {/* Primary SUPER PROMINENT Start Button */}
             <button
               onClick={handleStartMission}
-              className="flex-1 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-cyan-400 to-amber-400 text-slate-950 font-black text-lg xl:text-xl tracking-wide shadow-[0_0_35px_rgba(34,211,238,0.7)] hover:shadow-[0_0_50px_rgba(253,224,71,0.9)] transition-all flex items-center justify-center gap-3 btn-3d animate-shimmer"
+              className="flex-1 sm:flex-none px-9 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-[#FF7A00] via-[#FFAE00] to-[#FFD600] text-slate-950 font-black text-lg sm:text-xl tracking-wider shadow-[0_0_35px_rgba(255,165,0,0.85),0_0_60px_rgba(255,214,0,0.5)] hover:shadow-[0_0_50px_rgba(255,214,0,1)] hover:scale-105 active:scale-95 border-2 border-white/80 transition-all flex items-center justify-center gap-3.5 btn-3d animate-shimmer whitespace-nowrap cursor-pointer z-20"
             >
-              <Play className="w-6 h-6 fill-current" />
-              <span>BẮT ĐẦU NHIỆM VỤ</span>
+              <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-slate-950 text-slate-950 shrink-0" />
+              <span className="drop-shadow-sm font-black">BẮT ĐẦU NHIỆM VỤ</span>
             </button>
 
             {/* Help Button */}
@@ -104,7 +109,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 soundEngine.playClick();
                 onOpenHelp();
               }}
-              className="px-6 py-4 rounded-2xl panel-cosmic hover:bg-slate-800/90 border-slate-600/80 hover:border-cyan-400 text-white font-bold text-sm xl:text-base transition-all flex items-center justify-center gap-2.5 btn-3d shadow-xl"
+              className="px-6 py-4 rounded-2xl panel-cosmic hover:bg-slate-800/90 border-slate-600/80 hover:border-cyan-400 text-white font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2.5 btn-3d shadow-xl whitespace-nowrap"
             >
               <HelpCircle className="w-5 h-5 text-cyan-300" />
               <span>LUẬT CHƠI</span>
@@ -116,7 +121,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 soundEngine.playClick();
                 onOpenSettings();
               }}
-              className="px-6 py-4 rounded-2xl panel-cosmic hover:bg-slate-800/90 border-slate-600/80 hover:border-amber-400 text-white font-bold text-sm xl:text-base transition-all flex items-center justify-center gap-2.5 btn-3d shadow-xl"
+              className="px-6 py-4 rounded-2xl panel-cosmic hover:bg-slate-800/90 border-slate-600/80 hover:border-amber-400 text-white font-bold text-sm sm:text-base transition-all flex items-center justify-center gap-2.5 btn-3d shadow-xl whitespace-nowrap"
             >
               <Settings className="w-5 h-5 text-amber-300" />
               <span>CÀI ĐẶT</span>
