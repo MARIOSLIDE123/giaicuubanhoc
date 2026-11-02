@@ -1,0 +1,6 @@
+{
+  "name": "Giải Cứu Bạn Học – UFO Rescue Mission",
+  "description": "Game học tập Toán 10 tương tác: Các số đặc trưng đo xu thế trung tâm. Giải cứu bạn học bị kẹt trong tàu UFO qua 3 chặng hành trình.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

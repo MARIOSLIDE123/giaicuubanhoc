@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Be Vietnam Pro', 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #03081A;
+    color: #FFFFFF;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Cosmic Panel with high contrast against the galaxy background */
+.panel-cosmic {
+  background-color: rgba(6, 16, 43, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+.panel-cosmic-glow {
+  background-color: rgba(7, 20, 52, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(34, 211, 238, 0.45);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 0 24px rgba(34, 211, 238, 0.2);
+}
+
+/* High contrast text shadow to prevent text blending into galaxy background */
+.text-high-contrast {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.95);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.65), 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.text-glow-yellow {
+  text-shadow: 0 0 14px rgba(253, 224, 71, 0.65), 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+/* Custom glowing and 3D button effects */
+.glow-cyan {
+  box-shadow: 0 0 25px rgba(39, 223, 255, 0.45);
+}
+
+.glow-yellow {
+  box-shadow: 0 0 25px rgba(255, 200, 61, 0.45);
+}
+
+.glow-purple {
+  box-shadow: 0 0 25px rgba(113, 57, 185, 0.45);
+}
+
+.glow-orange {
+  box-shadow: 0 0 25px rgba(255, 138, 50, 0.45);
+}
+
+/* 3D button press animation */
+.btn-3d {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(0);
+}
+
+.btn-3d:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn-3d:active {
+  transform: translateY(2px);
+  filter: brightness(0.95);
+}
+
+/* Radar sweep animation */
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar {
+  animation: radar-sweep 4s linear infinite;
+}
+
+/* Smooth cosmic floating */
+@keyframes cosmic-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: cosmic-float 4.5s ease-in-out infinite;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Custom scrollbars for modals */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(7, 27, 73, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1769D2;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #27DFFF;
+}
