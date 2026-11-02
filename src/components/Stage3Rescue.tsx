@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   KeyRound, Unlock, CheckCircle, HelpCircle, 
-  Trophy, Sparkles, Check, X, ShieldAlert
+  Trophy, Sparkles, Check, X
 } from 'lucide-react';
 import { Question, Team, MultiPartItem } from '../types/game';
 import { STAGE_3_QUESTIONS } from '../data/questions';
@@ -219,28 +219,61 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
               </span>
             </div>
 
-            <h3 className="text-lg sm:text-xl xl:text-2xl font-black text-white leading-relaxed text-high-contrast mt-2">
-              {currentCodeQ.text}
+            {/* Context & Main Question Text */}
+            {currentCodeQ.contextDesc && (
+              <p className="text-xs sm:text-sm text-cyan-200 font-semibold mb-1">
+                📌 {currentCodeQ.contextDesc}
+              </p>
+            )}
+            <h3 className="text-base sm:text-lg xl:text-xl font-black text-white leading-relaxed text-high-contrast mt-1">
+              {currentCodeQ.questionText || currentCodeQ.text}
             </h3>
           </div>
 
-          {/* Dataset Box */}
+          {/* Dataset Box (Robust handling for both array and key-value object datasets) */}
           {currentCodeQ.dataset && (
-            <div className="p-4 rounded-xl bg-[#03091c]/90 border border-amber-500/40 shadow-inner space-y-2">
+            <div className="p-4 rounded-xl bg-[#03091c]/90 border border-amber-500/40 shadow-inner space-y-3">
               <div className="text-xs font-black uppercase tracking-wider text-amber-300 flex items-center justify-between">
                 <span>DỮ LIỆU THỰC TẾ CHIẾN DỊCH:</span>
-                <span className="text-slate-400 font-normal">Cỡ mẫu: n = {currentCodeQ.dataset.length}</span>
+                <span className="text-slate-400 font-normal">
+                  {Array.isArray(currentCodeQ.dataset)
+                    ? `Cỡ mẫu: n = ${currentCodeQ.dataset.length}`
+                    : 'Mẫu so sánh hai nhóm dữ liệu'}
+                </span>
               </div>
-              <div className="flex flex-wrap gap-2.5 items-center">
-                {currentCodeQ.dataset.map((val, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1.5 rounded-lg bg-slate-900 border border-amber-500/40 text-amber-300 font-mono font-black text-base xl:text-lg shadow-sm"
-                  >
-                    {val}
-                  </span>
-                ))}
-              </div>
+
+              {Array.isArray(currentCodeQ.dataset) ? (
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {currentCodeQ.dataset.map((val, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 border border-amber-500/40 text-amber-300 font-mono font-black text-base xl:text-lg shadow-sm"
+                    >
+                      {val}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {Object.entries(currentCodeQ.dataset).map(([groupName, values]) => (
+                    <div key={groupName} className="flex flex-wrap items-center gap-2">
+                      <span className="px-3 py-1 rounded-lg bg-amber-950/80 border border-amber-500/60 text-amber-300 font-black text-xs sm:text-sm uppercase min-w-[90px] text-center shadow">
+                        {groupName}
+                      </span>
+                      <div className="flex flex-wrap gap-2 items-center">
+                        {values.map((v, vIdx) => (
+                          <span
+                            key={vIdx}
+                            className="px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-amber-300 font-mono font-black text-sm sm:text-base shadow-sm"
+                          >
+                            {v}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -270,7 +303,7 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
             </div>
           )}
 
-          {/* Sub-items for Multi-Part Evaluation (a, b, c...) */}
+          {/* Sub-items for Multi-Part Evaluation (a, b, c...) - Fully Expanded with NO Text Squishing */}
           {currentCodeQ.subQuestions && currentCodeQ.subQuestions.length > 0 && (
             <div className="space-y-3 pt-1">
               <div className="text-xs font-black uppercase text-cyan-300 tracking-wider">
@@ -279,33 +312,41 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
               <div className="space-y-2.5">
                 {currentCodeQ.subQuestions.map((sub) => {
                   const evalState = evaluatedSubQuestions[sub.id];
+                  const promptText = sub.prompt || (sub as any).text || '';
+                  const expectedAns = sub.answer || (sub as any).expectedAnswer || '';
+
                   return (
                     <div
                       key={sub.id}
-                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md"
+                      className="p-3.5 xl:p-4 rounded-xl bg-slate-900/85 border border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:border-amber-400/50 transition-colors"
                     >
-                      <div className="flex items-start gap-2.5">
-                        <span className="w-6 h-6 rounded-md bg-amber-950 border border-amber-500 text-amber-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                          {sub.label}
-                        </span>
-                        <div>
-                          <p className="text-sm xl:text-base font-bold text-white text-high-contrast">
-                            {sub.text}
-                          </p>
-                          {sub.expectedAnswer && (
-                            <p className="text-xs text-amber-300 font-mono mt-0.5 font-semibold">
-                              Đáp số chuẩn: {sub.expectedAnswer}
-                            </p>
+                      {/* Left: Step label + Question prompt + Expected answer (Takes full width, never squished) */}
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-amber-950 border border-amber-500/60 text-amber-300 font-black text-xs sm:text-sm whitespace-nowrap shadow-sm">
+                            {sub.label}
+                          </span>
+                          {promptText && (
+                            <span className="text-sm sm:text-base font-bold text-white text-high-contrast leading-snug">
+                              {promptText}
+                            </span>
                           )}
                         </div>
+
+                        {expectedAns && (
+                          <div className="text-xs sm:text-sm text-cyan-300 font-mono font-bold bg-[#03091c]/80 px-3 py-1 rounded-lg border border-cyan-500/30 inline-block">
+                            💡 Đáp số chuẩn: <span className="text-amber-300">{expectedAns}</span>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      {/* Right: Teacher Correct / Incorrect Evaluation Buttons */}
+                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                         <button
                           onClick={() => handleToggleSub(sub, true)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all btn-3d ${
+                          className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all btn-3d whitespace-nowrap ${
                             evalState === true
-                              ? 'bg-emerald-600 text-white shadow-[0_0_12px_#10b981]'
+                              ? 'bg-emerald-600 text-white shadow-[0_0_15px_#10b981]'
                               : 'bg-slate-800 text-slate-300 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700'
                           }`}
                         >
@@ -314,9 +355,9 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
                         </button>
                         <button
                           onClick={() => handleToggleSub(sub, false)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all btn-3d ${
+                          className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all btn-3d whitespace-nowrap ${
                             evalState === false
-                              ? 'bg-red-600 text-white shadow-[0_0_12px_#ef4444]'
+                              ? 'bg-red-600 text-white shadow-[0_0_15px_#ef4444]'
                               : 'bg-slate-800 text-slate-300 hover:bg-red-950 hover:text-red-300 border border-slate-700'
                           }`}
                         >
@@ -359,7 +400,7 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-slate-700/80">
             <div className="text-xs sm:text-sm font-semibold text-slate-300">
               {activeTeam ? (
-                <span>Đội đang giải mã: <strong className="text-amber-300 text-base font-black px-2 py-0.5 rounded bg-blue-950 border border-blue-500/30">{activeTeam.name}</strong></span>
+                <span>Đội đang giải mã: <strong className="text-amber-300 text-base font-black px-2.5 py-0.5 rounded bg-blue-950 border border-blue-500/30">{activeTeam.name}</strong></span>
               ) : (
                 <span className="text-amber-300">Chưa chọn đội (nhấp chọn ở bảng điểm phía trên)</span>
               )}
@@ -368,7 +409,7 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={handleUnlockMasterKey}
-                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-sm sm:text-base shadow-lg hover:shadow-amber-400/50 flex items-center justify-center gap-2 btn-3d"
+                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-sm sm:text-base shadow-lg hover:shadow-amber-400/50 flex items-center justify-center gap-2 btn-3d whitespace-nowrap"
               >
                 <KeyRound className="w-5 h-5" />
                 <span>KÍCH HOẠT MẬT MÃ NÀY (+{currentCodeQ.points}Đ)</span>
@@ -376,7 +417,7 @@ export const Stage3Rescue: React.FC<Stage3Props> = ({
 
               <button
                 onClick={handleNextCode}
-                className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm sm:text-base transition-colors btn-3d"
+                className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm sm:text-base transition-colors btn-3d whitespace-nowrap"
               >
                 Mật mã tiếp
               </button>

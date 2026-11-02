@@ -285,9 +285,14 @@ export const Stage1Tracking: React.FC<Stage1Props> = ({
               </span>
             </div>
 
-            {/* Main Question Text with Large, Crystal-Clear Typography */}
-            <h3 className="text-lg sm:text-xl xl:text-2xl font-black text-white leading-relaxed text-high-contrast mt-2">
-              {currentQ.text}
+            {/* Context & Main Question Text with Large, Crystal-Clear Typography */}
+            {currentQ.contextDesc && (
+              <p className="text-xs sm:text-sm text-cyan-200 font-semibold mb-1">
+                📌 {currentQ.contextDesc}
+              </p>
+            )}
+            <h3 className="text-base sm:text-lg xl:text-xl font-black text-white leading-relaxed text-high-contrast mt-1">
+              {currentQ.questionText || currentQ.text}
             </h3>
           </div>
 

@@ -221,8 +221,14 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
               </span>
             </div>
 
-            <h3 className="text-lg sm:text-xl xl:text-2xl font-black text-white leading-relaxed text-high-contrast mt-2">
-              {currentLockQ.text}
+            {/* Context & Main Question Text */}
+            {currentLockQ.contextDesc && (
+              <p className="text-xs sm:text-sm text-purple-200 font-semibold mb-1">
+                📌 {currentLockQ.contextDesc}
+              </p>
+            )}
+            <h3 className="text-base sm:text-lg xl:text-xl font-black text-white leading-relaxed text-high-contrast mt-1">
+              {currentLockQ.questionText || currentLockQ.text}
             </h3>
           </div>
 
@@ -231,18 +237,22 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
             <div className="p-4 rounded-xl bg-[#03091c]/90 border border-purple-500/40 shadow-inner space-y-2">
               <div className="text-xs font-black uppercase tracking-wider text-purple-300 flex items-center justify-between">
                 <span>DỮ LIỆU ĐO ÁP SUẤT & THÔNG SỐ KHÓA:</span>
-                <span className="text-slate-400 font-normal">Cỡ mẫu: n = {currentLockQ.dataset.length}</span>
+                <span className="text-slate-400 font-normal">
+                  {Array.isArray(currentLockQ.dataset) ? `Cỡ mẫu: n = ${currentLockQ.dataset.length}` : ''}
+                </span>
               </div>
-              <div className="flex flex-wrap gap-2.5 items-center">
-                {currentLockQ.dataset.map((val, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1.5 rounded-lg bg-slate-900 border border-purple-500/40 text-amber-300 font-mono font-black text-base xl:text-lg shadow-sm"
-                  >
-                    {val}
-                  </span>
-                ))}
-              </div>
+              {Array.isArray(currentLockQ.dataset) && (
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {currentLockQ.dataset.map((val, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 border border-purple-500/40 text-amber-300 font-mono font-black text-base xl:text-lg shadow-sm"
+                    >
+                      {val}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -272,7 +282,7 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
             </div>
           )}
 
-          {/* Sub-items for Multi-Part Evaluation (a, b, c...) */}
+          {/* Sub-items for Multi-Part Evaluation (a, b, c...) - Fully Expanded with NO Text Squishing */}
           {currentLockQ.subQuestions && currentLockQ.subQuestions.length > 0 && (
             <div className="space-y-3 pt-1">
               <div className="text-xs font-black uppercase text-cyan-300 tracking-wider">
@@ -281,33 +291,41 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
               <div className="space-y-2.5">
                 {currentLockQ.subQuestions.map((sub) => {
                   const evalState = evaluatedSubQuestions[sub.id];
+                  const promptText = sub.prompt || (sub as any).text || '';
+                  const expectedAns = sub.answer || (sub as any).expectedAnswer || '';
+
                   return (
                     <div
                       key={sub.id}
-                      className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md"
+                      className="p-3.5 xl:p-4 rounded-xl bg-slate-900/85 border border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-md hover:border-purple-400/50 transition-colors"
                     >
-                      <div className="flex items-start gap-2.5">
-                        <span className="w-6 h-6 rounded-md bg-purple-950 border border-purple-500 text-purple-300 font-black text-xs flex items-center justify-center shrink-0 mt-0.5">
-                          {sub.label}
-                        </span>
-                        <div>
-                          <p className="text-sm xl:text-base font-bold text-white text-high-contrast">
-                            {sub.text}
-                          </p>
-                          {sub.expectedAnswer && (
-                            <p className="text-xs text-amber-300 font-mono mt-0.5 font-semibold">
-                              Đáp số chuẩn: {sub.expectedAnswer}
-                            </p>
+                      {/* Left: Step label + Prompt + Answer (Takes full width, never squished) */}
+                      <div className="flex-1 min-w-0 space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md bg-purple-950 border border-purple-500/60 text-purple-300 font-black text-xs sm:text-sm whitespace-nowrap shadow-sm">
+                            {sub.label}
+                          </span>
+                          {promptText && (
+                            <span className="text-sm sm:text-base font-bold text-white text-high-contrast leading-snug">
+                              {promptText}
+                            </span>
                           )}
                         </div>
+
+                        {expectedAns && (
+                          <div className="text-xs sm:text-sm text-cyan-300 font-mono font-bold bg-[#03091c]/80 px-3 py-1 rounded-lg border border-cyan-500/30 inline-block">
+                            💡 Đáp số chuẩn: <span className="text-amber-300">{expectedAns}</span>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      {/* Right: Teacher Correct / Incorrect Evaluation Buttons */}
+                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
                         <button
                           onClick={() => handleToggleSubQuestion(sub, true)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all btn-3d ${
+                          className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all btn-3d whitespace-nowrap ${
                             evalState === true
-                              ? 'bg-emerald-600 text-white shadow-[0_0_12px_#10b981]'
+                              ? 'bg-emerald-600 text-white shadow-[0_0_15px_#10b981]'
                               : 'bg-slate-800 text-slate-300 hover:bg-emerald-950 hover:text-emerald-300 border border-slate-700'
                           }`}
                         >
@@ -316,9 +334,9 @@ export const Stage2Infiltration: React.FC<Stage2Props> = ({
                         </button>
                         <button
                           onClick={() => handleToggleSubQuestion(sub, false)}
-                          className={`px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 transition-all btn-3d ${
+                          className={`px-3.5 py-2 rounded-xl font-black text-xs sm:text-sm flex items-center gap-1.5 transition-all btn-3d whitespace-nowrap ${
                             evalState === false
-                              ? 'bg-red-600 text-white shadow-[0_0_12px_#ef4444]'
+                              ? 'bg-red-600 text-white shadow-[0_0_15px_#ef4444]'
                               : 'bg-slate-800 text-slate-300 hover:bg-red-950 hover:text-red-300 border border-slate-700'
                           }`}
                         >
